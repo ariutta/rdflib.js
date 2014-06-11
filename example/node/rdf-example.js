@@ -2,7 +2,9 @@
  */
 // Some From http://brondsema.net/blog/index.php/2006/11/25/javascript_rdfparser_from_tabulator
 
+// use the line below if not actually in the repo
 //var $rdf = require('rdflib');
+// using this line because you can't npm install rdflib into it's own repo
 var $rdf = require('../../dist/rdflib.js');
 
 // For quick access to those namespaces:
@@ -22,16 +24,12 @@ var CONTACT = $rdf.Namespace('http://www.w3.org/2000/10/swap/pim/contact#');
 //  (extends RDFFormula from dig.csail.mit.edu/2005/ajar/ajaw/rdf/term.js which has no indexing and smushing)
 // for the real implementation used by Tabulator which uses indexing and smushing
 
-// var kb = new TestStore()
-
 var kb = $rdf.graph();
-
 var uri = 'http://bblfish.net/people/henry/card.rdf';
-
 var person = $rdf.sym(uri);
 
 var docURI;
-if (uri.slice(0, uri.indexOf('#') > -1)) {
+if (uri.indexOf('#') > -1) {
   docURI = uri.slice(0, uri.indexOf('#'));
 } else {
   docURI = uri;
