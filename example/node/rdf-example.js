@@ -25,7 +25,8 @@ var CONTACT = $rdf.Namespace('http://www.w3.org/2000/10/swap/pim/contact#');
 // for the real implementation used by Tabulator which uses indexing and smushing
 
 var kb = $rdf.graph();
-var uri = 'http://bblfish.net/people/henry/card.rdf';
+//var uri = 'http://bblfish.net/people/henry/card.rdf';
+var uri = 'http://www.pathwaycommons.org/pc2/Pathway_01c4db97c8d95c5c2480943ea1cb3038';
 var person = $rdf.sym(uri);
 
 var docURI;
