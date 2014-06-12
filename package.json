@@ -13,7 +13,8 @@
   "dependencies": {
     "coffee": "*",
     "jsdom": "*",
-    "xmlhttprequest": "*"
+    "xmlhttprequest": "*",
+    "xmldom": "~0.1.19"
   },
   "devDependencies": {
     "nodeunit": "*"
@@ -26,7 +27,12 @@
   ],
   "main": "dist/rdflib.js",
   "keywords": [
-    "linkeddata", "linked data",  "rdf", "rdfa",
-    "turtle", "semantic", "web"
+    "linkeddata",
+    "linked data",
+    "rdf",
+    "rdfa",
+    "turtle",
+    "semantic",
+    "web"
   ]
 }

@@ -60,13 +60,15 @@ $rdf.Fetcher = function(store, timeout, async) {
     };
     $rdf.Fetcher.RDFXMLHandler = function(args) {
         if (args) {
-            this.dom = args[0]
+            this.dom = args[0];
         }
         this.handlerFactory = function(xhr) {
             xhr.handle = function(cb) {
                 //sf.addStatus(xhr.req, 'parsing soon as RDF/XML...');
                 var kb = sf.store;
-                if (!this.dom) this.dom = $rdf.Util.parseXML(xhr.responseText);
+                if (!this.dom) {
+                  this.dom = $rdf.Util.parseXML(xhr.responseText);
+                }
 /*                {
                     var dparser;
                     if ((typeof tabulator != 'undefined' && tabulator.isExtension)) {
@@ -79,7 +81,7 @@ $rdf.Fetcher = function(store, timeout, async) {
                 }
 */
                 var root = this.dom.documentElement;
-                if (root.nodeName == 'parsererror') { //@@ Mozilla only See issue/issue110
+                if (root.nodeName === 'parsererror') { //@@ Mozilla only See issue/issue110
                     sf.failFetch(xhr, "Badly formed XML in " + xhr.uri.uri); //have to fail the request
                     throw new Error("Badly formed XML in " + xhr.uri.uri); //@@ Add details
                 }
@@ -165,22 +167,23 @@ $rdf.Fetcher = function(store, timeout, async) {
                 }
                 kb.add(xhr.uri, ns.rdf('type'), ns.link('WebPage'), sf.appNode);
                 // Do RDFa here
-                if ($rdf.rdfa && $rdf.rdfa.parse)
-                    $rdf.rdfa.parse(this.dom, kb, xhr.uri.uri);
+                if ($rdf.rdfa && $rdf.rdfa.parse) {
+                  $rdf.rdfa.parse(this.dom, kb, xhr.uri.uri);
+                }
                 cb(); // Fire done callbacks
-            }
-        }
+            };
+        };
     };
-    $rdf.Fetcher.XHTMLHandler.term = this.store.sym(this.thisURI + ".XHTMLHandler");
+    $rdf.Fetcher.XHTMLHandler.term = this.store.sym(this.thisURI + '.XHTMLHandler');
     $rdf.Fetcher.XHTMLHandler.toString = function() {
-        return "XHTMLHandler"
+        return 'XHTMLHandler';
     };
     $rdf.Fetcher.XHTMLHandler.register = function(sf) {
         sf.mediatypes['application/xhtml+xml'] = {
             'q': 0.3
-        }
+        };
     };
-    $rdf.Fetcher.XHTMLHandler.pattern = new RegExp("application/xhtml");
+    $rdf.Fetcher.XHTMLHandler.pattern = new RegExp('application/xhtml');
 
 
     /******************************************************/
@@ -188,39 +191,33 @@ $rdf.Fetcher = function(store, timeout, async) {
     $rdf.Fetcher.XMLHandler = function() {
         this.handlerFactory = function(xhr) {
             xhr.handle = function(cb) {
-                var kb = sf.store
-                var dparser;
-                if (typeof tabulator != 'undefined' && tabulator.isExtension) {
-                    dparser = Components.classes["@mozilla.org/xmlextras/domparser;1"].getService(Components.interfaces.nsIDOMParser);
-                } else {
-                    dparser = new DOMParser()
-                }
-                var dom = dparser.parseFromString(xhr.responseText, 'application/xml')
+                var kb = sf.store;
+                var dom = $rdf.Util.parseXML(xhr.responseText);
 
                 // XML Semantics defined by root element namespace
                 // figure out the root element
                 for (var c = 0; c < dom.childNodes.length; c++) {
                     // is this node an element?
-                    if (dom.childNodes[c].nodeType == 1) {
+                    if (dom.childNodes[c].nodeType === 1) {
                         // We've found the first element, it's the root
                         var ns = dom.childNodes[c].namespaceURI;
 
                         // Is it RDF/XML?
-                        if (ns != undefined && ns == ns['rdf']) {
-                            sf.addStatus(xhr.req, "Has XML root element in the RDF namespace, so assume RDF/XML.")
-                            sf.switchHandler('RDFXMLHandler', xhr, cb, [dom])
-                            return
+                        if (ns !== undefined && ns === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#') {
+                            sf.addStatus(xhr.req, 'Has XML root element in the RDF namespace, so assume RDF/XML.');
+                            sf.switchHandler('RDFXMLHandler', xhr, cb, [dom]);
+                            return;
                         }
                         // it isn't RDF/XML or we can't tell
                         // Are there any GRDDL transforms for this namespace?
                         // @@ assumes ns documents have already been loaded
-                        var xforms = kb.each(kb.sym(ns), kb.sym("http://www.w3.org/2003/g/data-view#namespaceTransformation"));
+                        var xforms = kb.each(kb.sym(ns), kb.sym('http://www.w3.org/2003/g/data-view#namespaceTransformation'));
                         for (var i = 0; i < xforms.length; i++) {
                             var xform = xforms[i];
                             // $rdf.log.info(xhr.uri.uri + " namespace " + ns + " has GRDDL ns transform" + xform.uri);
                              $rdf.Fetcher.doGRDDL(kb, xhr.uri, xform.uri, xhr.uri.uri);
                         }
-                        break
+                        break;
                     }
                 }
 
@@ -229,9 +226,9 @@ $rdf.Fetcher = function(store, timeout, async) {
                 if (dom.doctype) {
                     // $rdf.log.info("We found a DOCTYPE in " + xhr.uri)
                     if (dom.doctype.name == 'html' && dom.doctype.publicId.match(/^-\/\/W3C\/\/DTD XHTML/) && dom.doctype.systemId.match(/http:\/\/www.w3.org\/TR\/xhtml/)) {
-                        sf.addStatus(xhr.req,"Has XHTML DOCTYPE. Switching to XHTML Handler.\n")
-                        sf.switchHandler('XHTMLHandler', xhr, cb)
-                        return
+                        sf.addStatus(xhr.req,'Has XHTML DOCTYPE. Switching to XHTML Handler.\n');
+                        sf.switchHandler('XHTMLHandler', xhr, cb);
+                        return;
                     }
                 }
 
@@ -242,7 +239,7 @@ $rdf.Fetcher = function(store, timeout, async) {
                     if (xmlns && xmlns.match(/^http:\/\/www.w3.org\/1999\/xhtml/)) {
                         sf.addStatus(xhr.req, "Has a default namespace for " + "XHTML. Switching to XHTMLHandler.\n")
                         sf.switchHandler('XHTMLHandler', xhr, cb)
-                        return
+                        return;
                     }
                 }
 

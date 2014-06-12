@@ -280,20 +280,18 @@ $rdf.Util = {
 //
 
 $rdf.Util.parseXML = function(str) {
-    var dparser;
-    if ((typeof tabulator != 'undefined' && tabulator.isExtension)) {
-        dparser = Components.classes["@mozilla.org/xmlextras/domparser;1"].getService(
-                    Components.interfaces.nsIDOMParser);
-    } else if (typeof module != 'undefined' ){ // Node.js
-        //var libxmljs = require('libxmljs'); // Was jsdom before 2012-01 then libxmljs but that nonstandard
-        //return libxmljs.parseXmlString(str);
-        var jsdom = require('jsdom');
-        var dom = jsdom.jsdom(str, undefined, {} );// html, level, options
-        return dom
-    } else {
-        dparser = new DOMParser();
+  var dparser;
+  if (typeof tabulator !== 'undefined' && tabulator.isExtension) {
+    dparser = Components.classes['@mozilla.org/xmlextras/domparser;1'].getService(Components.interfaces.nsIDOMParser);
+  } else {
+    if ($rdf.env === 'node') {
+      // intentionally making 'DomParser' a global, to replicate browser environment in Node.js
+      DOMParser = require('xmldom').DOMParser;
     }
-    return dparser.parseFromString(str, 'application/xml');
+    dparser = new DOMParser();
+  }
+  var dom = dparser.parseFromString(str, 'application/xml');
+  return dom;
 };
 
 
