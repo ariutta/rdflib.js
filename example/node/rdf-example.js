@@ -1,7 +1,3 @@
-/* Demo application for Addressbook 
- */
-// Some From http://brondsema.net/blog/index.php/2006/11/25/javascript_rdfparser_from_tabulator
-
 // use the line below if not actually in the repo
 //var $rdf = require('rdflib');
 // using this line because you can't npm install rdflib into it's own repo
@@ -17,17 +13,21 @@ var RSS = $rdf.Namespace('http://purl.org/rss/1.0/');
 var XSD = $rdf.Namespace('http://www.w3.org/TR/2004/REC-xmlschema-2-20041028/#dt-');
 var CONTACT = $rdf.Namespace('http://www.w3.org/2000/10/swap/pim/contact#');
 
-
-
 // TestStore implementation from dig.csail.mit.edu/2005/ajar/ajaw/test/rdf/rdfparser.test.html
 // RDFIndexedFormula from dig.csail.mit.edu/2005/ajar/ajaw/rdf/identity.js
 //  (extends RDFFormula from dig.csail.mit.edu/2005/ajar/ajaw/rdf/term.js which has no indexing and smushing)
 // for the real implementation used by Tabulator which uses indexing and smushing
 
 var kb = $rdf.graph();
-//var uri = 'http://bblfish.net/people/henry/card.rdf';
-var uri = 'http://www.pathwaycommons.org/pc2/Pathway_01c4db97c8d95c5c2480943ea1cb3038';
+
+//*
+var uri = 'http://bblfish.net/people/henry/card.rdf';
 var person = $rdf.sym(uri);
+//*/
+
+/*
+var uri = 'http://www.pathwaycommons.org/pc2/Pathway_01c4db97c8d95c5c2480943ea1cb3038';
+//*/
 
 var docURI;
 if (uri.indexOf('#') > -1) {
@@ -38,7 +38,7 @@ if (uri.indexOf('#') > -1) {
 
 var fetch = $rdf.fetcher(kb);
 fetch.nowOrWhenFetched(docURI,undefined,function(ok, body){ // @@ check ok
-  console.log(ok);
-  console.log(body);
+  console.log('Success: ' + ok);
+  console.log('kb');
+  console.log(kb);
 });
-
