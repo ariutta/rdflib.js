@@ -20,12 +20,13 @@
     "nodeunit": "*"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "postinstall": "make"
   },
   "files": [
     "dist/rdflib.js"
   ],
-  "main": "rdflib.js",
+  "main": "dist/rdflib.js",
   "keywords": [
     "linkeddata",
     "linked data",
