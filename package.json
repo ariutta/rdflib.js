@@ -25,7 +25,7 @@
   "files": [
     "dist/rdflib.js"
   ],
-  "main": "dist/rdflib.js",
+  "main": "rdflib.js",
   "keywords": [
     "linkeddata",
     "linked data",
